@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../services/supabase'
 import products from '../data/products'
 import './ProductDetails.css'
+import toast from 'react-hot-toast'
 
-function ProductDetails({ showToast, fetchCartCount }) {
+function ProductDetails({ fetchCartCount }) {
   const { id } = useParams()
   const product = products.find((p) => p.id === parseInt(id))
 
@@ -36,7 +37,7 @@ function ProductDetails({ showToast, fetchCartCount }) {
   // Add to Cart function - saves to Supabase
   const addToCart = async () => {
     if (!selectedSize) {
-      showToast('Please select a size first!', 'error')
+      toast.error('Please select a size first!')
       return
     }
 
@@ -59,11 +60,11 @@ function ProductDetails({ showToast, fetchCartCount }) {
 
       if (error) throw error
 
-      showToast(`${product.name} added to cart!`, 'success')
+      toast.success(`${product.name} added to cart!`)
       fetchCartCount()
     } catch (err) {
       console.error('Add to cart error:', err)
-      showToast('Failed to add to cart. Check Supabase config.', 'error')
+      toast.error('Failed to add to cart. Check Supabase config.')
     } finally {
       setIsAdding(false)
     }

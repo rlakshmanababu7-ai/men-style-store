@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../services/supabase'
 import './Cart.css'
+import toast from 'react-hot-toast'
 
-function Cart({ showToast, fetchCartCount }) {
+function Cart({ fetchCartCount }) {
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -20,7 +21,7 @@ function Cart({ showToast, fetchCartCount }) {
       setCartItems(data || [])
     } catch (err) {
       console.error('Fetch cart error:', err)
-      showToast('Failed to load cart. Check Supabase config.', 'error')
+      toast.error('Failed to load cart. Check Supabase config.')
     } finally {
       setLoading(false)
     }
@@ -42,10 +43,10 @@ function Cart({ showToast, fetchCartCount }) {
 
       setCartItems((prev) => prev.filter((item) => item.id !== itemId))
       fetchCartCount()
-      showToast('Item removed from cart', 'success')
+      toast.success('Item removed from cart')
     } catch (err) {
       console.error('Remove from cart error:', err)
-      showToast('Failed to remove item', 'error')
+      toast.error('Failed to remove item')
     }
   }
 

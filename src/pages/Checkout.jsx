@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../services/supabase'
 import './Checkout.css'
+import toast from 'react-hot-toast'
 
-function Checkout({ showToast, fetchCartCount }) {
+function Checkout({ fetchCartCount }) {
   const navigate = useNavigate()
   const [cartItems, setCartItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -58,19 +59,19 @@ function Checkout({ showToast, fetchCartCount }) {
 
     // Validation
     if (!formData.name.trim()) {
-      showToast('Please enter your name', 'error')
+      toast.error('Please enter your name')
       return
     }
     if (!formData.phone.trim() || formData.phone.length < 10) {
-      showToast('Please enter a valid phone number', 'error')
+      toast.error('Please enter a valid phone number')
       return
     }
     if (!formData.address.trim()) {
-      showToast('Please enter your address', 'error')
+      toast.error('Please enter your address')
       return
     }
     if (cartItems.length === 0) {
-      showToast('Your cart is empty!', 'error')
+      toast.error('Your cart is empty!')
       return
     }
 
@@ -105,10 +106,10 @@ function Checkout({ showToast, fetchCartCount }) {
 
       // 4. Show success
       setOrderPlaced(true)
-      showToast('Order placed successfully! 🎉', 'success')
+      toast.success('Order placed successfully! 🎉')
     } catch (err) {
       console.error('Place order error:', err)
-      showToast('Failed to place order. Check Supabase config.', 'error')
+      toast.error('Failed to place order. Check Supabase config.')
     } finally {
       setPlacing(false)
     }
